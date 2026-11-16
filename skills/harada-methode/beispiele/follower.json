@@ -1,0 +1,132 @@
+{
+  "sprache": "de",
+  "name": "Chris",
+  "ziel": "100.000 Instagram-Follower",
+  "deadline": "31.12.2026",
+  "start": "Aktuell rund 75.000 Follower",
+  "warum": {
+    "ich_greifbar": "Mehr Reichweite für Workshop und Produkte",
+    "ich_ungreifbar": "Zeigen, dass ich ein großes Ziel durchziehe",
+    "andere_greifbar": "Mehr Menschen bekommen kostenlose KI-Anleitungen",
+    "andere_ungreifbar": "Andere trauen sich, KI selbst zu nutzen"
+  },
+  "bereiche": [
+    {
+      "name": "Hooks & Skripte",
+      "schritte": [
+        { "text": "Jeden Tag 10 Hooks schreiben", "typ": "R" },
+        { "text": "Top-20-Hooks meiner Nische sammeln", "typ": "A" },
+        { "text": "Jedes Skript laut lesen und kürzen", "typ": "R" },
+        { "text": "Hook-Formeln als Vorlage anlegen", "typ": "A" },
+        { "text": "Jeden Hook vorab einer Person zeigen", "typ": "R" },
+        { "text": "5 alte Top-Reels neu schreiben", "typ": "A" },
+        { "text": "Jede Woche ein Skript mit Story-Bogen", "typ": "R" },
+        { "text": "Liste starker Einstiegswörter anlegen", "typ": "A" }
+      ]
+    },
+    {
+      "name": "Konstanz",
+      "schritte": [
+        { "text": "Jeden Tag ein Reel posten", "typ": "R" },
+        { "text": "Feste Drehtage im Kalender blocken", "typ": "A" },
+        { "text": "Jeden Sonntag die Woche planen", "typ": "R" },
+        { "text": "Vorrat von 10 fertigen Reels aufbauen", "typ": "A" },
+        { "text": "Dreh-Setup dauerhaft aufgebaut lassen", "typ": "A" },
+        { "text": "5 Reels pro Drehtermin aufnehmen", "typ": "R" },
+        { "text": "Postingzeiten nach Insights festlegen", "typ": "A" },
+        { "text": "Nie zwei Tage ohne Post", "typ": "R" }
+      ]
+    },
+    {
+      "name": "Formate testen",
+      "schritte": [
+        { "text": "Jede Woche ein neues Format testen", "typ": "R" },
+        { "text": "3 Karussells pro Woche posten", "typ": "R" },
+        { "text": "Jeden Tag eine Story mit Umfrage", "typ": "R" },
+        { "text": "Jedes Reel als 2 Trial-Varianten testen", "typ": "R" },
+        { "text": "Collab-Reel mit 3 Creatorn drehen", "typ": "A" },
+        { "text": "Einmal im Monat live gehen", "typ": "R" },
+        { "text": "Serie mit 10 Folgen starten", "typ": "A" },
+        { "text": "Bestes Reel als Karussell recyceln", "typ": "A" }
+      ]
+    },
+    {
+      "name": "Community",
+      "schritte": [
+        { "text": "Jeden Tag 30 Min. Kommentare beantworten", "typ": "R" },
+        { "text": "Jede DM binnen 24 h beantworten", "typ": "R" },
+        { "text": "Täglich 10 Creator sinnvoll kommentieren", "typ": "R" },
+        { "text": "Jeden Monat einen Gratis-Workshop geben", "typ": "R" },
+        { "text": "Follower-Fragen als Reel beantworten", "typ": "R" },
+        { "text": "Liste mit Zuschauer-Fragen anlegen", "typ": "A" },
+        { "text": "Jede Woche einem Creator helfen", "typ": "R" },
+        { "text": "Danke-Story bei jedem Meilenstein", "typ": "A" }
+      ]
+    },
+    {
+      "name": "Lead Magnets",
+      "schritte": [
+        { "text": "Zu jedem CTA-Reel ein Freebie liefern", "typ": "R" },
+        { "text": "Alle DM-Flows einmal komplett testen", "typ": "A" },
+        { "text": "Newsletter-Angebot in jede DM einbauen", "typ": "A" },
+        { "text": "Jede Woche einen neuen Guide veröffentlichen", "typ": "R" },
+        { "text": "Bio-Link auf ein Angebot ausrichten", "typ": "A" },
+        { "text": "CTA-Wort in Video und Caption gleich halten", "typ": "R" },
+        { "text": "Top-5-Freebies prüfen und verbessern", "typ": "A" },
+        { "text": "Kommentar-Antworten der Flows variieren", "typ": "A" }
+      ]
+    },
+    {
+      "name": "Daten",
+      "schritte": [
+        { "text": "Jeden Montag die Insights auswerten", "typ": "R" },
+        { "text": "72 h nach Post Ergebnis notieren", "typ": "R" },
+        { "text": "Playbook mit Gewinner-Mustern anlegen", "typ": "A" },
+        { "text": "Jede Woche 20 Nischen-Reels analysieren", "typ": "R" },
+        { "text": "Ziel jedes Reels vor dem Dreh festlegen", "typ": "R" },
+        { "text": "Neue Follower pro Reel messen", "typ": "A" },
+        { "text": "Jeden Monat schwache Formate streichen", "typ": "R" },
+        { "text": "Wochenziel in Followern festlegen", "typ": "A" }
+      ]
+    },
+    {
+      "name": "Energie",
+      "schritte": [
+        { "text": "Jede Nacht 7 Stunden schlafen", "typ": "R" },
+        { "text": "Jeden Tag 30 Min. bewegen", "typ": "R" },
+        { "text": "Jeden Tag 2 Liter Wasser trinken", "typ": "R" },
+        { "text": "Handy 1 h vor dem Schlafen weglegen", "typ": "R" },
+        { "text": "3× pro Woche Sport machen", "typ": "R" },
+        { "text": "Feste Feierabendzeit festlegen", "typ": "A" },
+        { "text": "Mittags 15 Min. an die frische Luft", "typ": "R" },
+        { "text": "Einen Tag pro Woche ohne Content", "typ": "R" }
+      ]
+    },
+    {
+      "name": "Mindset",
+      "schritte": [
+        { "text": "Jeden Morgen das Ziel lesen", "typ": "R" },
+        { "text": "Jeden Abend Tagebuch schreiben", "typ": "R" },
+        { "text": "Lernliste für Rückschläge führen", "typ": "A" },
+        { "text": "Statistiken nur einmal am Tag ansehen", "typ": "R" },
+        { "text": "Mentor oder Sparringspartner finden", "typ": "A" },
+        { "text": "Jede Woche ein Buchkapitel lesen", "typ": "R" },
+        { "text": "Nach jedem Flop eine Lehre notieren", "typ": "R" },
+        { "text": "Warum-Satz an den Schreibtisch hängen", "typ": "A" }
+      ]
+    }
+  ],
+  "routinen": [
+    "Ein Reel posten",
+    "10 Hooks schreiben",
+    "30 Min. Kommentare beantworten",
+    "10 Creator sinnvoll kommentieren",
+    "DMs binnen 24 h beantworten",
+    "7 Stunden schlafen",
+    "30 Min. bewegen",
+    "Morgens das Ziel lesen",
+    "Statistiken nur einmal ansehen",
+    "Abends Tagebuch schreiben"
+  ],
+  "satz": "Jeden Tag ein Reel besser als gestern."
+}

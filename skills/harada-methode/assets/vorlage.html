@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harada-Plan</title>
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #1c1b1a;
+    --muted: #6b6762;
+    --line: #cfcac3;
+    --line-strong: #1c1b1a;
+    --paper: #ffffff;
+    --desk: #ebe8e3;
+    --accent: #c4372a;
+    --accent-ink: #ffffff;
+    --tint: #f8e7e4;
+    --tint-2: #fbf4f2;
+    --font: ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--desk); color: var(--ink); font-family: var(--font); }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Werkzeugleiste (nur Bildschirm) */
+  .bar {
+    position: sticky; top: 0; z-index: 5;
+    display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between;
+    padding: 12px 16px; background: rgba(235,232,227,.94); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar b { font-size: 15px; }
+  .bar span { color: var(--muted); font-size: 13px; }
+  .bar button {
+    font: 600 14px var(--font); color: var(--accent-ink); background: var(--accent);
+    border: 0; border-radius: 999px; padding: 9px 18px; cursor: pointer;
+  }
+  .bar button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .desk { overflow-x: auto; padding: 24px 16px 48px; }
+  .sheets { display: flex; flex-direction: column; align-items: center; gap: 28px; min-width: max-content; }
+
+  .sheet {
+    background: var(--paper); box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 8px 28px rgba(0,0,0,.08);
+    padding: 12mm 13mm; position: relative; overflow: hidden;
+  }
+  .hoch { width: 210mm; height: 297mm; }
+  .quer { width: 297mm; height: 210mm; }
+
+  .kopf { display: flex; justify-content: space-between; align-items: flex-end; gap: 6mm; margin-bottom: 5mm; }
+  .marke { font-size: 8.5pt; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+  .titel { font-size: 17pt; font-weight: 800; line-height: 1.15; margin-top: 1.2mm; }
+  .unter { font-size: 9.5pt; color: var(--muted); margin-top: 1.2mm; }
+  .rechts { text-align: right; font-size: 9pt; color: var(--muted); white-space: nowrap; }
+  .rechts strong { display: block; color: var(--ink); font-size: 12pt; }
+
+  [contenteditable]:hover { background: rgba(196,55,42,.07); }
+  [contenteditable]:focus { outline: 1.5px solid var(--accent); outline-offset: -1.5px; background: #fff; }
+
+  /* Raster 9×9 */
+  .raster {
+    width: 184mm; height: 184mm; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+    gap: 1.6mm; background: var(--line-strong); border: 1.6mm solid var(--line-strong);
+  }
+  .block { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 1px; background: var(--line); }
+  .zelle {
+    background: var(--paper); position: relative; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    padding: 1.1mm 1.1mm;
+  }
+  .zelle.aktion { padding-top: 3.2mm; }
+  .zelle .t { display: block; width: 100%; line-height: 1.18; font-size: 10px; hyphens: manual; overflow-wrap: normal; word-break: normal; }
+  .zelle .t.trennen { hyphens: auto; overflow-wrap: anywhere; }
+  .zelle.bereich { background: var(--tint); }
+  .zelle.bereich .t { font-weight: 750; font-size: 11px; }
+  .zelle.ziel { background: var(--accent); color: var(--accent-ink); }
+  .zelle.ziel .t { font-weight: 800; font-size: 13px; }
+  .zelle.ziel .d { font-size: 6.5pt; opacity: .92; font-weight: 600; margin-top: .8mm; white-space: nowrap; }
+  .zelle .nr { position: absolute; top: .7mm; left: 1mm; font-size: 6pt; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .zelle.routine::after {
+    content: "↻"; position: absolute; top: .3mm; right: .9mm; font-size: 7.5pt; color: var(--accent); font-weight: 700;
+  }
+
+  .unten { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 5mm; border: 1px solid var(--line); }
+  .warum-kopf { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; padding: 2mm 3mm; border-bottom: 1px solid var(--line); background: var(--tint-2); }
+  .warum-kopf b { font-size: 10pt; }
+  .legende { font-size: 8pt; color: var(--muted); }
+  .legende i { font-style: normal; color: var(--accent); font-weight: 700; }
+  .feld { padding: 2.2mm 3mm; min-height: 15mm; }
+  .feld:nth-child(odd) { border-left: 1px solid var(--line); }
+  .feld:nth-child(n+4) { border-top: 1px solid var(--line); }
+  .feld small { display: block; font-size: 7pt; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1mm; font-weight: 600; }
+  .feld div { font-size: 9.5pt; line-height: 1.3; }
+
+  /* Checkliste */
+  table { border-collapse: collapse; width: 100%; }
+  .liste { table-layout: fixed; }
+  .liste th, .liste td { border: 1px solid var(--line); text-align: center; font-size: 8pt; padding: 0; }
+  .liste thead th { height: 7mm; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .liste td { height: 11.5mm; }
+  .liste .name { text-align: left; padding: 0 2.5mm; width: 62mm; font-size: 9.5pt; font-weight: 600; color: var(--ink); line-height: 1.2; }
+  .liste .nrz { width: 6mm; color: var(--muted); font-size: 8pt; }
+  .liste .proz { width: 14mm; background: var(--tint-2); font-weight: 700; }
+  .liste tfoot td { height: 8mm; background: var(--tint-2); font-weight: 600; color: var(--muted); }
+  .liste tfoot .name { color: var(--muted); font-weight: 600; }
+  .monat { display: inline-block; min-width: 45mm; border-bottom: 1px solid var(--ink); }
+  .hinweis { margin-top: 3.5mm; font-size: 8.5pt; color: var(--muted); display: flex; justify-content: space-between; gap: 8mm; }
+  .bilanz { margin-top: 3mm; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); }
+  .bilanz .feld { min-height: 16mm; }
+
+  /* Tagebuch */
+  .tb-zeile { display: flex; gap: 6mm; font-size: 9.5pt; margin-bottom: 3mm; }
+  .tb-zeile .l { color: var(--muted); }
+  .strich { display: inline-block; border-bottom: 1px solid var(--ink); min-width: 32mm; }
+  .tb-ziel { background: var(--accent); color: var(--accent-ink); padding: 2.6mm 4mm; display: flex; justify-content: space-between; gap: 4mm; font-size: 10pt; font-weight: 700; }
+  .tb-ziel span { font-weight: 500; opacity: .92; }
+  .tb-satz { border: 1px solid var(--line); border-top: 0; padding: 2.2mm 4mm; font-size: 9.5pt; display: flex; gap: 3mm; }
+  .tb-satz small { color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: 7pt; font-weight: 600; padding-top: .6mm; white-space: nowrap; }
+  .tb-satz div { font-style: italic; }
+  .tb { display: grid; grid-template-columns: 1.08fr 1fr; gap: 6mm; margin-top: 5mm; }
+  .box h3 { font-size: 8pt; text-transform: uppercase; letter-spacing: .1em; margin: 0 0 1.6mm; color: var(--accent); }
+  .plan th { font-size: 7.5pt; color: var(--muted); font-weight: 600; text-align: left; padding: 0 1.5mm 1mm; }
+  .plan td { border-top: 1px solid var(--line); height: 9.2mm; font-size: 8pt; color: var(--muted); padding: 0 1.5mm; vertical-align: top; padding-top: 1mm; }
+  .plan td:first-child { width: 11mm; font-variant-numeric: tabular-nums; }
+  .plan td + td { border-left: 1px solid var(--line); }
+  .linien div { border-bottom: 1px solid var(--line); height: 7.4mm; display: flex; align-items: flex-end; gap: 2mm; font-size: 8.5pt; padding-bottom: .8mm; }
+  .kasten { width: 3.4mm; height: 3.4mm; border: 1px solid var(--ink); border-radius: .6mm; flex: none; display: inline-block; margin-bottom: .4mm; }
+  .box + .box { margin-top: 4.5mm; }
+  .bew div { display: flex; justify-content: space-between; align-items: center; height: 7mm; border-bottom: 1px solid var(--line); font-size: 9pt; }
+  .punkte { display: flex; gap: 1.8mm; }
+  .punkte i { width: 4.6mm; height: 4.6mm; border: 1px solid var(--ink); border-radius: 50%; font-style: normal; font-size: 6.5pt; display: grid; place-items: center; color: var(--muted); }
+  .fuss { position: absolute; bottom: 7mm; left: 13mm; right: 13mm; font-size: 7pt; color: var(--muted); display: flex; justify-content: space-between; }
+
+  .leer { max-width: 520px; margin: 80px auto; padding: 0 16px; font-size: 15px; line-height: 1.5; }
+
+  @page raster { size: A4 portrait; margin: 0; }
+  @page liste { size: A4 landscape; margin: 0; }
+  @page tagebuch { size: A4 portrait; margin: 0; }
+  @media print {
+    html, body { background: #fff; }
+    .bar { display: none; }
+    .desk { padding: 0; overflow: visible; }
+    .sheets { gap: 0; display: block; min-width: 0; zoom: 1 !important; }
+    .sheet { box-shadow: none; margin: 0; break-after: page; }
+    .sheet:last-child { break-after: auto; }
+    .s-raster { page: raster; }
+    .s-liste { page: liste; }
+    .s-tagebuch { page: tagebuch; }
+    [contenteditable]:hover { background: transparent; }
+  }
+</style>
+</head>
+<body>
+<div class="bar" id="bar">
+  <div><b id="bar-titel">Harada-Plan</b> <span id="bar-hinweis"></span></div>
+  <button type="button" id="drucken"></button>
+</div>
+<div class="desk"><div class="sheets" id="sheets"></div></div>
+
+<script>
+const PLAN = /*__PLAN__*/null;
+
+const TEXTE = {
+  de: {
+    marke: "Harada-Methode", bis: "bis", drucken: "Drucken",
+    hinweis: "Jedes Feld lässt sich anklicken und ändern.",
+    warum: "Warum ich das will", legende: "<i>↻</i> Routine · ohne Zeichen: einmalige Aufgabe",
+    ich_greifbar: "Für mich · greifbar", ich_ungreifbar: "Für mich · nicht greifbar",
+    andere_greifbar: "Für andere · greifbar", andere_ungreifbar: "Für andere · nicht greifbar",
+    liste: "Routine-Checkliste", monat: "Monat", erledigt: "Erledigt pro Tag", routine: "Routine",
+    listeHinweis: "Jeden Abend abhaken. Am Monatsende: erledigte Tage ÷ Tage im Monat = Prozent.",
+    listeHinweis2: "Bleibt eine Routine dauerhaft deutlich unter 80 %: kleiner machen oder ersetzen.",
+    lief: "Was lief diesen Monat gut?", anders: "Was ändere ich nächsten Monat?",
+    tagebuch: "Tagebuch", datum: "Datum", tag: "Tag", satz: "Satz des Tages",
+    plan: "Tagesplan", zeit: "Zeit", geplant: "Geplant", tats: "Tatsächlich",
+    top5: "Top 5 heute", routinen: "Routinen", bewertung: "Bewertung 1–5",
+    geist: "Geist", koennen: "Können", koerper: "Körper", alltag: "Alltag",
+    gut: "Was lief heute gut?", morgen: "Was mache ich morgen besser?",
+    tbFuss: "Diese Seite für jeden Tag neu drucken.",
+    leer: "In diese Vorlage wurde noch kein Plan eingesetzt."
+  },
+  en: {
+    marke: "Harada Method", bis: "by", drucken: "Print",
+    hinweis: "Click any field to edit it.",
+    warum: "Why I want this", legende: "<i>↻</i> routine · no mark: one-time task",
+    ich_greifbar: "For me · tangible", ich_ungreifbar: "For me · intangible",
+    andere_greifbar: "For others · tangible", andere_ungreifbar: "For others · intangible",
+    liste: "Routine check sheet", monat: "Month", erledigt: "Done per day", routine: "Routine",
+    listeHinweis: "Tick every evening. At month end: days done ÷ days in month = percent.",
+    listeHinweis2: "If a routine stays well below 80 %: make it smaller or replace it.",
+    lief: "What went well this month?", anders: "What will I change next month?",
+    tagebuch: "Daily diary", datum: "Date", tag: "Day", satz: "Phrase of the day",
+    plan: "Plan for today", zeit: "Time", geplant: "Planned", tats: "Actual",
+    top5: "Top 5 today", routinen: "Routines", bewertung: "Score 1–5",
+    geist: "Mind", koennen: "Skills", koerper: "Body", alltag: "Daily life",
+    gut: "What went well today?", morgen: "What will I do better tomorrow?",
+    tbFuss: "Print this page again for every day.",
+    leer: "No plan has been inserted into this template yet."
+  }
+};
+
+const L = TEXTE[(PLAN && PLAN.sprache) === "en" ? "en" : "de"];
+document.documentElement.lang = (PLAN && PLAN.sprache) === "en" ? "en" : "de";
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+function editierbar(n) { n.contentEditable = "true"; n.spellcheck = false; return n; }
+
+/* Positionen im 3×3-Block ohne Mitte, im Uhrzeigersinn ab oben links */
+const POS = [0, 1, 2, 5, 8, 7, 6, 3];
+
+function kopf(rechtsOben, rechtsUnten) {
+  const k = el("div", "kopf");
+  const links = el("div");
+  links.append(el("div", "marke", L.marke));
+  links.append(editierbar(el("div", "titel", PLAN.ziel)));
+  const unter = [PLAN.name, PLAN.start].filter(Boolean).join(" · ");
+  if (unter) links.append(editierbar(el("div", "unter", unter)));
+  const r = el("div", "rechts");
+  r.append(document.createTextNode(rechtsOben));
+  r.append(editierbar(el("strong", "", rechtsUnten)));
+  k.append(links, r);
+  return k;
+}
+
+function seiteRaster() {
+  const s = el("section", "sheet hoch s-raster");
+  s.append(kopf(L.bis, PLAN.deadline));
+
+  const raster = el("div", "raster");
+  const bloecke = [];
+  for (let b = 0; b < 9; b++) {
+    const block = el("div", "block");
+    const zellen = [];
+    for (let z = 0; z < 9; z++) { const c = el("div", "zelle"); block.append(c); zellen.push(c); }
+    bloecke.push(zellen);
+    raster.append(block);
+  }
+  function text(zelle, t) { const span = editierbar(el("span", "t", t)); zelle.append(span); return span; }
+
+  const mitte = bloecke[4][4];
+  mitte.classList.add("ziel");
+  text(mitte, PLAN.ziel);
+  mitte.append(el("div", "d", L.bis + " " + PLAN.deadline));
+
+  PLAN.bereiche.forEach((b, i) => {
+    const p = POS[i];
+    const innen = bloecke[4][p];
+    innen.classList.add("bereich");
+    text(innen, b.name);
+    const aussen = bloecke[p][4];
+    aussen.classList.add("bereich");
+    text(aussen, b.name);
+    b.schritte.forEach((sch, j) => {
+      const c = bloecke[p][POS[j]];
+      c.classList.add("aktion");
+      if (sch.typ === "R") c.classList.add("routine");
+      c.append(el("span", "nr", (i + 1) + "." + (j + 1)));
+      text(c, sch.text);
+    });
+  });
+  s.append(raster);
+
+  const unten = el("div", "unten");
+  const wk = el("div", "warum-kopf");
+  wk.append(el("b", "", L.warum));
+  const leg = el("span", "legende"); leg.innerHTML = L.legende; wk.append(leg);
+  unten.append(wk);
+  ["ich_greifbar", "ich_ungreifbar", "andere_greifbar", "andere_ungreifbar"].forEach(k => {
+    const f = el("div", "feld");
+    f.append(el("small", "", L[k]));
+    f.append(editierbar(el("div", "", (PLAN.warum && PLAN.warum[k]) || "")));
+    unten.append(f);
+  });
+  s.append(unten);
+  return s;
+}
+
+function seiteListe() {
+  const s = el("section", "sheet quer s-liste");
+  const k = el("div", "kopf");
+  const links = el("div");
+  links.append(el("div", "marke", L.liste));
+  links.append(editierbar(el("div", "titel", PLAN.ziel)));
+  const r = el("div", "rechts");
+  r.append(document.createTextNode(L.monat + " "));
+  const m = el("span", "monat"); m.innerHTML = "&nbsp;"; r.append(m);
+  k.append(links, r);
+  s.append(k);
+
+  const t = el("table", "liste");
+  const thead = el("thead"); const hr = el("tr");
+  hr.append(el("th", "nrz", "#"), el("th", "name", L.routine));
+  for (let d = 1; d <= 31; d++) hr.append(el("th", "", String(d)));
+  hr.append(el("th", "proz", "%"));
+  thead.append(hr); t.append(thead);
+
+  const tbody = el("tbody");
+  const routinen = PLAN.routinen.slice(0, 10);
+  routinen.forEach((rt, i) => {
+    const tr = el("tr");
+    tr.append(el("td", "nrz", String(i + 1)));
+    tr.append(editierbar(el("td", "name", rt)));
+    for (let d = 1; d <= 31; d++) tr.append(el("td"));
+    tr.append(el("td", "proz"));
+    tbody.append(tr);
+  });
+  t.append(tbody);
+  const tfoot = el("tfoot"); const fr = el("tr");
+  fr.append(el("td", "nrz"), el("td", "name", L.erledigt));
+  for (let d = 1; d <= 31; d++) fr.append(el("td"));
+  fr.append(el("td", "proz"));
+  tfoot.append(fr); t.append(tfoot);
+  s.append(t);
+
+  // Zeilenhöhe an die Anzahl der Routinen anpassen
+  const hoehe = Math.min(13, Math.max(9, 118 / Math.max(routinen.length, 1)));
+  t.querySelectorAll("tbody td").forEach(td => td.style.height = hoehe + "mm");
+
+  const h = el("div", "hinweis");
+  h.append(el("span", "", L.listeHinweis), el("span", "", L.listeHinweis2));
+  s.append(h);
+  const bil = el("div", "bilanz");
+  [L.lief, L.anders].forEach((titel, i) => {
+    const f = el("div", "feld"); if (i === 1) f.style.borderLeft = "1px solid var(--line)";
+    f.append(el("small", "", titel)); bil.append(f);
+  });
+  s.append(bil);
+  return s;
+}
+
+function seiteTagebuch() {
+  const s = el("section", "sheet hoch s-tagebuch");
+  const k = el("div", "kopf");
+  const links = el("div");
+  links.append(el("div", "marke", L.tagebuch));
+  const zeile = el("div", "tb-zeile");
+  zeile.style.marginTop = "2.5mm"; zeile.style.marginBottom = "0";
+  const d = el("span"); d.append(el("span", "l", L.datum + " "), el("span", "strich"));
+  const t = el("span"); t.append(el("span", "l", L.tag + " "), Object.assign(el("span", "strich"), { style: "min-width:14mm" }));
+  zeile.append(d, t); links.append(zeile);
+  k.append(links);
+  s.append(k);
+
+  const zb = el("div", "tb-ziel");
+  zb.append(editierbar(el("div", "", PLAN.ziel)), el("span", "", L.bis + " " + PLAN.deadline));
+  s.append(zb);
+  const satz = el("div", "tb-satz");
+  satz.append(el("small", "", L.satz), editierbar(el("div", "", PLAN.satz || "")));
+  s.append(satz);
+
+  const tb = el("div", "tb");
+  const links2 = el("div", "box");
+  links2.append(el("h3", "", L.plan));
+  const plan = el("table", "plan");
+  const ph = el("tr"); ph.append(el("th", "", L.zeit), el("th", "", L.geplant), el("th", "", L.tats));
+  plan.append(ph);
+  for (let h = 6; h <= 22; h++) {
+    const tr = el("tr"); tr.append(el("td", "", (h < 10 ? "0" : "") + h + ":00"), el("td"), el("td")); plan.append(tr);
+  }
+  links2.append(plan);
+
+  const rechts = el("div");
+  const top = el("div", "box"); top.append(el("h3", "", L.top5));
+  const tl = el("div", "linien");
+  for (let i = 1; i <= 5; i++) { const z = el("div"); z.append(el("span", "kasten")); tl.append(z); }
+  top.append(tl); rechts.append(top);
+
+  const rt = el("div", "box"); rt.append(el("h3", "", L.routinen));
+  const rl = el("div", "linien");
+  PLAN.routinen.slice(0, 10).forEach(r => { const z = el("div"); z.append(el("span", "kasten"), el("span", "", r)); rl.append(z); });
+  rt.append(rl); rechts.append(rt);
+
+  const bw = el("div", "box bew"); bw.append(el("h3", "", L.bewertung));
+  [L.geist, L.koennen, L.koerper, L.alltag].forEach(n => {
+    const z = el("div"); z.append(el("span", "", n));
+    const p = el("span", "punkte"); for (let i = 1; i <= 5; i++) p.append(el("i", "", String(i)));
+    z.append(p); bw.append(z);
+  });
+  rechts.append(bw);
+
+  [L.gut, L.morgen].forEach(titel => {
+    const b = el("div", "box"); b.append(el("h3", "", titel));
+    const l = el("div", "linien"); for (let i = 0; i < 3; i++) l.append(el("div")); b.append(l);
+    rechts.append(b);
+  });
+
+  tb.append(links2, rechts);
+  s.append(tb);
+  const fuss = el("div", "fuss");
+  fuss.append(el("span", "", L.tbFuss), el("span", "", L.marke));
+  s.append(fuss);
+  return s;
+}
+
+/* Text in Rasterzellen so lange verkleinern, bis er passt */
+function einpassen(span) {
+  const zelle = span.parentElement;
+  const start = zelle.classList.contains("ziel") ? 14 : zelle.classList.contains("bereich") ? 11 : 10;
+  const passt = () => zelle.scrollHeight <= zelle.clientHeight + 0.5 && span.scrollWidth <= span.clientWidth + 0.5;
+  // Erst ohne Silbentrennung verkleinern, damit Wörter ganz bleiben
+  span.classList.remove("trennen");
+  let g = start;
+  span.style.fontSize = g + "px";
+  while (!passt() && g > 7) { g -= 0.5; span.style.fontSize = g + "px"; }
+  if (passt()) return;
+  // Reicht das nicht: Silbentrennung erlauben und noch einmal von vorn
+  span.classList.add("trennen");
+  g = start;
+  span.style.fontSize = g + "px";
+  while (!passt() && g > 6) { g -= 0.5; span.style.fontSize = g + "px"; }
+}
+
+function start() {
+  document.getElementById("drucken").textContent = L.drucken;
+  document.getElementById("drucken").addEventListener("click", () => window.print());
+  document.getElementById("bar-hinweis").textContent = L.hinweis;
+  const sheets = document.getElementById("sheets");
+  if (!PLAN) {
+    document.querySelector(".desk").innerHTML = "";
+    document.querySelector(".desk").append(el("p", "leer", L.leer));
+    return;
+  }
+  document.title = PLAN.ziel + " · " + L.marke;
+  document.getElementById("bar-titel").textContent = PLAN.ziel;
+  sheets.append(seiteRaster(), seiteListe(), seiteTagebuch());
+  const spans = sheets.querySelectorAll(".zelle .t");
+  const alle = () => spans.forEach(einpassen);
+  alle();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(alle);
+  spans.forEach(s => s.addEventListener("input", () => einpassen(s)));
+
+  // Auf schmalen Bildschirmen die Blätter verkleinern, damit sie ganz zu sehen sind
+  const breitestes = Math.max(...[...sheets.children].map(s => s.offsetWidth));
+  const skalieren = () => {
+    const platz = document.querySelector(".desk").clientWidth - 32;
+    sheets.style.zoom = String(Math.min(1, platz / breitestes));
+  };
+  skalieren();
+  window.addEventListener("resize", skalieren);
+}
+start();
+</script>
+</body>
+</html>

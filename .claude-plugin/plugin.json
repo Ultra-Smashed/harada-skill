@@ -1,0 +1,13 @@
+{
+  "name": "harada-methode",
+  "description": "Macht aus einem großen Ziel einen Plan nach der Harada-Methode: 64er-Raster mit acht Bereichen und 64 Schritten, Routine-Checkliste für einen Monat und Tagebuchseite. Druckfertig als eine HTML-Datei.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Christopher Thanisch",
+    "url": "https://thanisch.co"
+  },
+  "homepage": "https://thanisch.co/wissen/guides/harada-methode-claude",
+  "repository": "https://github.com/Ultra-Smashed/harada-skill",
+  "license": "MIT",
+  "keywords": ["harada", "ziele", "zielplanung", "mandala-chart", "ohtani", "gewohnheiten", "routinen", "tagebuch", "deutsch", "claude-skills"]
+}

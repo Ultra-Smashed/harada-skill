@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "harada-methode",
+  "description": "Ein Ziel, acht Bereiche, 64 Schritte: Zielplan nach der Harada-Methode.",
+  "owner": {
+    "name": "Christopher Thanisch",
+    "url": "https://thanisch.co"
+  },
+  "plugins": [
+    {
+      "name": "harada-methode",
+      "description": "Stellt ein paar Fragen zu deinem Ziel und baut daraus das komplette 64er-Raster, eine Routine-Checkliste und eine Tagebuchseite, druckfertig als eine HTML-Datei.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
